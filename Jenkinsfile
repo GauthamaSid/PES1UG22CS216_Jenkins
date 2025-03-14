@@ -1,49 +1,33 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:14'
-        }
-    }
+    agent any
 
     stages {
-        stage('Clone repository') {
+        stage('Build') {
             steps {
-                git branch: 'main', url: 'https://github.com/<user>/<repo>.git'
+                script {
+                    sh 'g++ -o PES1UG22CS216-1 main.cpp'
+                }
             }
         }
 
-        stage('Install dependencies') {
+        stage('Test') {
             steps {
-                sh 'npm install'
+                script {
+                    sh './PES1UG22CS216-1'
+                }
             }
         }
 
-        stage('Build application') {
+        stage('Deploy') {
             steps {
-                sh 'npm run build'
-            }
-        }
-
-        stage('Test application') {
-            steps {
-                sh 'npm test'
-            }
-        }
-
-        stage('Push Docker image') {
-            steps {
-                sh 'docker build -t my-app:latest .'
-                sh 'docker push my-app:latest'
+                echo 'Deploy stage (Placeholder, modify as needed)'
             }
         }
     }
 
     post {
-        success {
-            echo 'Pipeline executed successfully!'
-        }
         failure {
-            echo 'Pipeline failed!'
+            echo 'Pipeline failed'
         }
     }
 }
